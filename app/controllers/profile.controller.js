@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const db = require("../models");
+const {cloudinary}  = require('../utils/cloudinary');
 const Profile = db.profile;
+
 
 exports.listAllProfiles = (req, res) => {
   Profile.find({}, (err, profiles) => {
@@ -9,8 +11,18 @@ exports.listAllProfiles = (req, res) => {
   });
 };
 
-exports.createAProfile = (req, res) => {
+exports.createAProfile = async(req, res) => {
   const newProfile = new Profile(req.body);
+  const fileStr = req.body.previewSource; //from frontend
+
+  newProfile.imageUrl = "";
+  if (fileStr) {
+    const uploadResponse = await cloudinary.uploader.upload(fileStr,{});
+    console.log(uploadResponse)
+    newProfile.imageUrl = uploadResponse.public_id;
+  } else {
+    newProfile.imageUrl = '';
+  }
   newProfile.save((err, profile) => {
     if (err) res.send(err);
     res.send(profile);
@@ -24,8 +36,20 @@ exports.readAProfile = (req, res) => {
   });
 };
 
-exports.updateAProfile = (req, res) => {
+exports.updateAProfile = async(req, res) => {
+  console.log(req.body);
+  const fileStr = req.body.previewSource.previewSource; //from frontend
+
+  if (fileStr) {
+    const uploadResponse = await cloudinary.uploader.upload(fileStr,{});
+    console.log(uploadResponse)
+    req.body.imageUrl = uploadResponse.public_id;
+  } else {
+    req.body.imageUrl = '';
+  }
+
   Profile.findOneAndUpdate(
+
     {_id: req.params.profileId},
     req.body,
     { new: true },
