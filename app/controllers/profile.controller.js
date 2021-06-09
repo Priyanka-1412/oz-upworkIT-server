@@ -7,8 +7,7 @@ const Profile = db.profile;
 exports.findProfile = (req, res) => {
 	Profile.find({ user: req.params.userId })
 		.populate("profile")
-		.then((err, profile) => {
-			if (err) res.send(err);
+		.then((profile) => {
 			res.json({ profile });
 		})
 		.catch((err) => console.log("There was an ERROR:", err));
@@ -56,13 +55,15 @@ exports.updateAProfile = async(req, res) => {
   if (fileStr) {
     const uploadResponse = await cloudinary.uploader.upload(fileStr,{});
     console.log(uploadResponse)
-    req.body.imageUrl = uploadResponse.public_id;
+    req.body.profile[0].imageUrl = uploadResponse.public_id;
   } else {
-    req.body.imageUrl = '';
+    req.body.profile[0].imageUrl = '';
   }
 
-  Profile.findOneAndUpdate({_id: req.params.profileId}, { user: req.params.userId }, req.body, { new: true }, (err, profile) => {
-		if (err) res.send(err);
+  Profile.findOneAndUpdate({ user: req.params.userId }, req.body.profile[0], { new: true }, (err, profile) => {
+		if (err) console.log('err', err);
+		console.log("SEEMED TO BE UPDATED");
+		console.log('PROFILE', profile);
 		res.json(profile);
 	});
 
