@@ -9,4 +9,8 @@ module.exports = (app) => {
     .get(profileBuilder.readAProfile)
     .put(profileBuilder.updateAProfile)
     .delete(profileBuilder.deleteAProfile);
+
+  app.route("/user/:userId")
+    .get(profileBuilder.findProfile)
+    .put(profileBuilder.updateAProfile);
 };

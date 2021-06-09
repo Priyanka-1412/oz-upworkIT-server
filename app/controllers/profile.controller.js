@@ -4,6 +4,16 @@ const {cloudinary}  = require('../utils/cloudinary');
 const Profile = db.profile;
 
 
+exports.findProfile = (req, res) => {
+	Profile.find({ user: req.params.userId })
+		.populate("profile")
+		.then((err, profile) => {
+			if (err) res.send(err);
+			res.json({ profile });
+		})
+		.catch((err) => console.log("There was an ERROR:", err));
+};
+
 exports.listAllProfiles = (req, res) => {
   Profile.find({}, (err, profiles) => {
     if (err) res.send(err);
@@ -14,6 +24,7 @@ exports.listAllProfiles = (req, res) => {
 exports.createAProfile = async(req, res) => {
   const newProfile = new Profile(req.body);
   const fileStr = req.body.previewSource; //from frontend
+	console.log("fileStr", fileStr);
 
   newProfile.imageUrl = "";
   if (fileStr) {
@@ -24,7 +35,9 @@ exports.createAProfile = async(req, res) => {
     newProfile.imageUrl = '';
   }
   newProfile.save((err, profile) => {
+		console.log("err", err);
     if (err) res.send(err);
+		console.log('profile', profile);
     res.send(profile);
   });
 };
@@ -48,16 +61,21 @@ exports.updateAProfile = async(req, res) => {
     req.body.imageUrl = '';
   }
 
-  Profile.findOneAndUpdate(
+  Profile.findOneAndUpdate({_id: req.params.profileId}, { user: req.params.userId }, req.body, { new: true }, (err, profile) => {
+		if (err) res.send(err);
+		res.json(profile);
+	});
 
-    {_id: req.params.profileId},
-    req.body,
-    { new: true },
-    (err, profile) => {
-      if (err) res.send(err);
-      res.json(profile);
-    }
-  )
+  // Profile.findOneAndUpdate(
+  //
+  //   {_id: req.params.profileId},
+  //   req.body,
+  //   { new: true },
+  //   (err, profile) => {
+  //     if (err) res.send(err);
+  //     res.json(profile);
+  //   }
+  // )
 };
 
 

@@ -3,6 +3,12 @@ const { Schema } = mongoose;
 
 const ProfileSchema = new Schema (
   {
+    user: {
+		type: Schema.Types.ObjectId,
+		ref: "User",
+		required: [true, "User cannot be empty."]
+	},
+  
     imageUrl: {
       type:String
     },
