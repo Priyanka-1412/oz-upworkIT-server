@@ -15,6 +15,6 @@ module.exports = (app) => {
     .get(projectBuilder.findProject)
     .put(projectBuilder.updateAProject);
 
-  // app.route("/projects/search/:text")
-  //   .get(projectBuilder.searchProject);
+  app.route("/projects/search/:keyword")
+    .get(projectBuilder.searchProjects);
 };

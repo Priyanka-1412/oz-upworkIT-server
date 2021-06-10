@@ -26,6 +26,12 @@ const ProjectSchema = new Schema (
     paymentType: {
       type:String
     },
+    phone: {
+      type:String,
+    },
+    email: {
+      type:String,
+    },
     estimatedBudget: {
       type: Number,
       required: [true, "Please provide Estimated Budget."]

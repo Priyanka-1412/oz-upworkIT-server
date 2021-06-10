@@ -20,6 +20,8 @@ exports.listAllprojects = (req, res) => {
 };
 
 exports.createAProject = (req, res) => {
+	console.log("Create a project...");
+	console.log(req.body);
   const newProject = new Project(req.body);
   newProject.save((err, project) => {
     if (err) res.send(err);
@@ -35,16 +37,6 @@ exports.readAProject = (req, res) => {
 };
 
 exports.updateAProject = async(req, res) => {
-  const fileStr = req.body.previewSource.previewSource;
-
-  if (fileStr) {
-    const uploadResponse = await cloudinary.uploader.upload(fileStr,{});
-    console.log(uploadResponse)
-    req.body.project[0].imageUrl = uploadResponse.public_id;
-  } else {
-    req.body.project[0].imageUrl = '';
-  }
-
   Project.findOneAndUpdate(
     {_id: req.params.userId},
     req.body.project[0],
@@ -64,11 +56,16 @@ exports.deleteAProject = (req, res) => {
       _id: req.params.projectId
     });
   })
-}
+};
 
-// exports.searchProject = (req, res) => {
-// 	Project.textSearch(req.params, function(err, projects){
-// 		if(err) return handleError(err);
-// 		res.json(projects);
-// 	});
-// }
+exports.searchProjects = (req, res) => {
+	console.log("searching projects..");
+	const keyword = req.params.keyword;
+	console.log(keyword);
+
+	Project.find({
+		$text: {$search: keyword},
+	})
+	.then(projects => res.json(projects))
+	.catch(e => console.log(e));
+};

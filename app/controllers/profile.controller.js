@@ -66,17 +66,6 @@ exports.updateAProfile = async(req, res) => {
 		console.log('PROFILE', profile);
 		res.json(profile);
 	});
-
-  // Profile.findOneAndUpdate(
-  //
-  //   {_id: req.params.profileId},
-  //   req.body,
-  //   { new: true },
-  //   (err, profile) => {
-  //     if (err) res.send(err);
-  //     res.json(profile);
-  //   }
-  // )
 };
 
 
