@@ -1,6 +1,7 @@
 const projectBuilder = require('../controllers/project.controller');
 
 module.exports = (app) => {
+
   app.route('/projects')
     .get(projectBuilder.listAllprojects)
     .post(projectBuilder.createAProject);
@@ -9,4 +10,11 @@ module.exports = (app) => {
     .get(projectBuilder.readAProject)
     .put(projectBuilder.updateAProject)
     .delete(projectBuilder.deleteAProject);
+
+  app.route("/projects/user/:userId")
+    .get(projectBuilder.findProject)
+    .put(projectBuilder.updateAProject);
+
+  // app.route("/projects/search/:text")
+  //   .get(projectBuilder.searchProject);
 };

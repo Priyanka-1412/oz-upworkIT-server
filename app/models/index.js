@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+//const textSearch = require('mongoose-text-search');
 mongoose.Promise = global.Promise;
 
 const db = {};

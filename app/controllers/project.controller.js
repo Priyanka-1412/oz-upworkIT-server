@@ -1,6 +1,16 @@
 const mongoose = require('mongoose');
+//const textSearch = require('mongoose-text-search');
 const db = require("../models");
 const Project = db.project;
+
+exports.findProject = (req, res) => {
+	Project.find({ user: req.params.userId })
+		.populate("project")
+		.then((project) => {
+			res.json({ project });
+		})
+		.catch((err) => console.log("There was an ERROR:", err));
+};
 
 exports.listAllprojects = (req, res) => {
   Project.find({}, (err, projects) => {
@@ -24,10 +34,20 @@ exports.readAProject = (req, res) => {
   });
 };
 
-exports.updateAProject = (req, res) => {
+exports.updateAProject = async(req, res) => {
+  const fileStr = req.body.previewSource.previewSource;
+
+  if (fileStr) {
+    const uploadResponse = await cloudinary.uploader.upload(fileStr,{});
+    console.log(uploadResponse)
+    req.body.project[0].imageUrl = uploadResponse.public_id;
+  } else {
+    req.body.project[0].imageUrl = '';
+  }
+
   Project.findOneAndUpdate(
-    {_id: req.params.projectId},
-    req.body,
+    {_id: req.params.userId},
+    req.body.project[0],
     { new: true },
     (err, project) => {
       if (err) res.send(err);
@@ -45,3 +65,10 @@ exports.deleteAProject = (req, res) => {
     });
   })
 }
+
+// exports.searchProject = (req, res) => {
+// 	Project.textSearch(req.params, function(err, projects){
+// 		if(err) return handleError(err);
+// 		res.json(projects);
+// 	});
+// }

@@ -1,8 +1,14 @@
 const mongoose = require('mongoose');
+//const textSearch = require('mongoose-text-search');
 const { Schema } = mongoose;
 
 const ProjectSchema = new Schema (
   {
+    user: {
+		type: Schema.Types.ObjectId,
+		ref: "User",
+		required: [true, "User cannot be empty."]
+	},
     name: {
       type:String,
       required: [true, "Project Name cannot be empty."]
@@ -28,5 +34,9 @@ const ProjectSchema = new Schema (
   },
   { collection: 'project' }
 );
+
+//ProjectSchema.plugin(textSearch);
+
+ProjectSchema.index({name: 'text', description: 'text', skills: 'text'});
 
 module.exports = mongoose.model('Project', ProjectSchema);

@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
+require('mongoose-type-url');
 
 const ProfileSchema = new Schema (
   {
@@ -8,7 +9,6 @@ const ProfileSchema = new Schema (
 		ref: "User",
 		required: [true, "User cannot be empty."]
 	},
-  
     imageUrl: {
       type:String
     },
@@ -19,6 +19,15 @@ const ProfileSchema = new Schema (
     title: {
       type:String,
       required: [true, "Please enter title."]
+    },
+    aboutme: {
+      type:String,
+    },
+    phone: {
+      type:String,
+    },
+    email: {
+      type:String,
     },
     skills: [
       {
@@ -38,12 +47,15 @@ const ProfileSchema = new Schema (
     resume: {
       type:String
   },
-    portfolio: {
-      type:String
+  portfolio: {
+      type:mongoose.SchemaTypes.Url
   },
   linkedIn: {
-      type:String
-  }
+      type:mongoose.SchemaTypes.Url
+  },
+  github: {
+      type:mongoose.SchemaTypes.Url
+  },
 },
   {collection: 'profile'}
 );
