@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const db = require("../models");
 const Project = db.project;
 
+//find project of user using userId
 exports.findProject = (req, res) => {
 	Project.find({ user: req.params.userId })
 		.populate("project")
@@ -12,6 +13,7 @@ exports.findProject = (req, res) => {
 		.catch((err) => console.log("There was an ERROR:", err));
 };
 
+//get all projects
 exports.listAllprojects = (req, res) => {
   Project.find({}, (err, projects) => {
     if (err) res.send(err);
@@ -19,6 +21,7 @@ exports.listAllprojects = (req, res) => {
   });
 };
 
+//create  a new project
 exports.createAProject = (req, res) => {
 	console.log("Create a project...");
 	console.log(req.body);
@@ -29,6 +32,7 @@ exports.createAProject = (req, res) => {
   });
 };
 
+//read any particular project using projectId
 exports.readAProject = (req, res) => {
   Project.findById(req.params.projectId, (err, project) => {
     if (err) return res.send(err);
@@ -36,9 +40,10 @@ exports.readAProject = (req, res) => {
   });
 };
 
+//update a profile
 exports.updateAProject = async(req, res) => {
   Project.findOneAndUpdate(
-    {_id: req.params.userId},
+    { user: req.params.userId},
     req.body.project[0],
     { new: true },
     (err, project) => {
@@ -48,6 +53,7 @@ exports.updateAProject = async(req, res) => {
   )
 };
 
+//delete a profile
 exports.deleteAProject = (req, res) => {
   Project.deleteOne({_id: req.params.projectId}, (err) => {
     if (err) res.send(err);
@@ -58,6 +64,7 @@ exports.deleteAProject = (req, res) => {
   })
 };
 
+//search for project using keyword
 exports.searchProjects = (req, res) => {
 	console.log("searching projects..");
 	const keyword = req.params.keyword;
