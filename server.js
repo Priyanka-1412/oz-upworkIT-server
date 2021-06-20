@@ -8,17 +8,9 @@ const app = express();
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
-// For CORS
-const devServer = "http://localhost:3001";
-const prodServer =  "https://priyanka-1412.github.io/oz-upworkIT-client/#/";
 
-const whitelist = [devServer, prodServer];
-const corsOptions = {
-	origin(origin, callback) {
-		if (whitelist.indexOf(origin) !== -1) callback(null, true);
-		else callback(new Error("Not allowed by CORS"));
-	},
-	credentials: true
+var corsOptions = {
+  origin: "localhost:3001"
 };
 
 app.use(cors(corsOptions));
